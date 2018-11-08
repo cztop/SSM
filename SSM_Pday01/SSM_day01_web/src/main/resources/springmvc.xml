@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/security
+       http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <context:component-scan base-package="com.itheima.controller"/>
+    <context:component-scan base-package="com.itheima.log"/>
+
+    <mvc:annotation-driven conversion-service="conversionService">
+    </mvc:annotation-driven>
+
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/pages/">
+
+        </property>
+        <property name="suffix" value=".jsp">
+
+        </property>
+    </bean>
+
+    <mvc:default-servlet-handler/>
+
+    <!--6. 自定义类型转换-->
+    <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
+        <property name="converters">
+            <set>
+                <bean class="com.itheima.converter.StringToDateConverter">
+
+                </bean>
+            </set>
+        </property>
+    </bean>
+
+
+  <!--配置aop自动代理，认证需要开启，日志需要开启：目的是基于cglib（第三方动态代理）自动生成代理对象   -->
+    <aop:aspectj-autoproxy proxy-target-class="true">
+
+    </aop:aspectj-autoproxy>
+
+    <!--开启安全框架的注解-->
+    <security:global-method-security secured-annotations="enabled"/>
+</beans>
